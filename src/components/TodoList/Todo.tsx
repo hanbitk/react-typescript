@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './todos.css';
 import { Todo } from '../../model';
 import { AiFillEdit, AiFillDelete } from 'react-icons/ai';
@@ -13,6 +13,8 @@ type Props = {
 const SingleTodo = ({ todo, todos, setTodos }: Props) => {
   const [edit, setEdit] = useState<boolean>(false);
   const [editTodo, setEditTodo] = useState<string>(todo.todo);
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleEdit = (e: React.FormEvent, id: number) => {
     e.preventDefault();
@@ -39,10 +41,16 @@ const SingleTodo = ({ todo, todos, setTodos }: Props) => {
       })
     );
   };
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [edit]);
+
   return (
     <form className="todos__single" onSubmit={(e) => handleEdit(e, todo.id)}>
       {edit ? (
         <input
+          ref={inputRef}
           className="todos__single--text"
           value={editTodo}
           onChange={(e) => setEditTodo(e.target.value)}
